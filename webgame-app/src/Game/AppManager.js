@@ -1,13 +1,13 @@
 import React from 'react';
 import '../css/App.css';
-import GameSelect from '../Animations/GameSelect';
+import GameSelectAnimation from '../Animations/GameSelect';
 
 class AppManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      screen: "GameSelect",
-      select: "GameSelect"
+      screen: 0,
+      select: 0
     }
     this.keyPress = this.keyPress.bind(this);
   }
@@ -23,37 +23,48 @@ class AppManager extends React.Component {
   keyPress(event) {
     switch (event.keyCode) {
       case 37:
-        this.setState({select: "Left"});
+        if(this.state.select === 0) {
+          this.setState({select: 1});
+        }
+        else if(this.state.select > 1) {
+          this.setState({select: this.state.select - 1});
+        }
         break;
       case 38:
-        this.setState({select: "Up"});
+        if(this.state.select === 0) {
+          this.setState({select: 1});
+        }
         break;
       case 39:
-        this.setState({select: "Right"});
+        if(this.state.select === 0) {
+          this.setState({select: 1});
+        }
+        else if(this.state.select < 3) {
+          this.setState({select: this.state.select + 1});
+        }
         break;
       case 40:
-        this.setState({select: "Down"});
+        if(this.state.select === 0) {
+          this.setState({select: 1});
+        }
         break;
       case 13:
         if(this.state.screen !== this.state.select) {
           this.setState({screen: this.state.select});
         }
-
         break;
       default:
     } 
   }
 
   render() {
-    if (this.state.screen === "GameSelect") {
-      this.changeScreen = <GameSelect mode={0}/>;
-    } else if (this.state.screen === "Left" || this.state.screen === "Right") {
-      this.changeScreen = <GameSelect mode={1}/>;
-    } else if (this.state.screen === "Up" || this.state.screen === "Down") {
-      this.changeScreen = <GameSelect mode={2}/>;
-    } else {
+    if (this.state.select > 3 || this.state.select < 0) {
       this.changeScreen = "SOMETHING WENT WRONG";
-    }
+    } else if (this.state.screen === 1) {
+      // this.changeScreen = 
+    } else {
+      this.changeScreen = <GameSelectAnimation screen={this.state.screen} mode={this.state.select}/>;
+    } 
     return (
       <div>
         <header className="App-header">
