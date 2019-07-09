@@ -1,6 +1,7 @@
 import React from 'react';
 import '../css/App.css';
-import GameSelectAnimation from '../Animations/GameSelect';
+import GameSelectCanvas from '../Animations/GameSelect';
+import SnakeManager from './SnakeManager';
 
 class AppManager extends React.Component {
   constructor(props) {
@@ -21,49 +22,51 @@ class AppManager extends React.Component {
   }
 
   keyPress(event) {
-    switch (event.keyCode) {
-      case 37:
-        if(this.state.select === 0) {
-          this.setState({select: 1});
-        }
-        else if(this.state.select > 1) {
-          this.setState({select: this.state.select - 1});
-        }
-        break;
-      case 38:
-        if(this.state.select === 0) {
-          this.setState({select: 1});
-        }
-        break;
-      case 39:
-        if(this.state.select === 0) {
-          this.setState({select: 1});
-        }
-        else if(this.state.select < 3) {
-          this.setState({select: this.state.select + 1});
-        }
-        break;
-      case 40:
-        if(this.state.select === 0) {
-          this.setState({select: 1});
-        }
-        break;
-      case 13:
-        if(this.state.screen !== this.state.select) {
-          this.setState({screen: this.state.select});
-        }
-        break;
-      default:
-    } 
+    if(this.state.screen === 0) {
+      switch (event.keyCode) {
+        case 37:
+          if(this.state.select === 0) {
+            this.setState({select: 1});
+          }
+          else if(this.state.select > 1) {
+            this.setState({select: this.state.select - 1});
+          }
+          break;
+        case 38:
+          if(this.state.select === 0) {
+            this.setState({select: 1});
+          }
+          break;
+        case 39:
+          if(this.state.select === 0) {
+            this.setState({select: 1});
+          }
+          else if(this.state.select < 3) {
+            this.setState({select: this.state.select + 1});
+          }
+          break;
+        case 40:
+          if(this.state.select === 0) {
+            this.setState({select: 1});
+          }
+          break;
+        case 13:
+          if(this.state.screen !== this.state.select) {
+            this.setState({screen: this.state.select});
+          }
+          break;
+        default:
+      } 
+    }
   }
 
   render() {
     if (this.state.select > 3 || this.state.select < 0) {
       this.changeScreen = "SOMETHING WENT WRONG";
     } else if (this.state.screen === 1) {
-      // this.changeScreen = 
+      this.changeScreen = <SnakeManager />;
     } else {
-      this.changeScreen = <GameSelectAnimation screen={this.state.screen} mode={this.state.select}/>;
+      this.changeScreen = <GameSelectCanvas screen={this.state.screen} mode={this.state.select}/>;
     } 
     return (
       <div>
