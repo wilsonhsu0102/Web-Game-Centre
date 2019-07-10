@@ -74,17 +74,7 @@ class AppManager extends React.Component {
           <div> {this.changeScreen} </div>
           <div> screen: {this.state.screen} </div>
           <div> select: {this.state.select} </div>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+
         </header>
       </div>
     )
