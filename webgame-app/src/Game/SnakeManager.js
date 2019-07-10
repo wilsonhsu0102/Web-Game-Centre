@@ -1,7 +1,7 @@
 import React from 'react';
 import Snake from './Snake';
 import Snacc from './Snacc';
-import SnakeCanvas from '../Animations/Snake';
+import {SnakeCanvas, GameOverCanvas} from '../Animations/Snake';
 
 const fps = 200; //milliseconds
 
@@ -27,7 +27,7 @@ class SnakeManager extends React.Component{
     componentDidMount() {
         this.rAF = requestAnimationFrame(this.updateAnimationState);
         document.addEventListener("keydown", this.keyPress, false);
-        setInterval(this.delayFunction, fps);
+        this.intervalId = setInterval(this.delayFunction, fps);
     }
       
     componentWillUnmount() {
@@ -51,19 +51,26 @@ class SnakeManager extends React.Component{
                 break;
             default:
         }
+        this.moveSnake(this.state.dx, this.state.dy);
+        if (this.isSnaccGone(this.state.dx, this.state.dy)) {
+            this.setState(prevState => ({score: prevState.score + 1}));
+        }
     }
 
     delayFunction() {
         this.rAF = requestAnimationFrame(this.updateAnimationState);
-        if (this.snakeCommittedSuicide() || this.snakeOutOfBound()) {
-            this.setState({gameOver: true});
-        } else if (this.isSnaccGone()) {
-            this.setState({score: this.state.score++});
-            console.log("Score:" + this.state.score);
-        } 
+        
     }
 
     updateAnimationState() {
+        if (this.snakeCommittedSuicide() || this.snakeOutOfBound()) {
+            this.setState({dx: 0, dy: 0, gameOver: true});
+            clearInterval(this.intervalId);
+        } else if (this.isSnaccGone(this.state.dx, this.state.dy)) {
+            this.setState(prevState => ({score: prevState.score + 1}));
+            console.log("Score:" + this.state.score);
+        } 
+        this.setState(prevState => ({dx: prevState.dx, dy:prevState.dy}));
         this.moveSnake(this.state.dx, this.state.dy);
     }
 
@@ -105,7 +112,16 @@ class SnakeManager extends React.Component{
     }
 
     render() {
-        return <SnakeCanvas gameOver={this.state.gameOver} snake={this.snake} snaccPosX={this.snacc.randomPosX} snaccPosY={this.snacc.randomPosY}/>;
+        if (this.state.gameOver === true) {
+            this.screen = <GameOverCanvas score={this.state.score}/>;
+        } else {
+            this.screen = <SnakeCanvas gameOver={this.state.gameOver} snake={this.snake} snacc={this.snacc}/>;
+        }
+        return (<div> 
+            {this.screen}
+            <div> Score: {this.state.score} </div>
+            </div>
+            )
     }
 }
 
